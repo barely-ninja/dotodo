@@ -1,5 +1,7 @@
 # Yet another to-do app in basic React
-Production bundle included, build is not necessary
+
+_Production bundle included, build is not necessary_
+
 ---
 ## To build:
 1. npm install
