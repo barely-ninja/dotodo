@@ -1,8 +1,10 @@
-#Yet another to-do app in basic React
+# Yet another to-do app in basic React
 Production bundle included, build is not necessary
-##To build:
+---
+## To build:
 1. npm install
 2. npm run compile
-##Usage:
+---
+## Usage:
 1. npm run start
 2. open app at http://localhost:4000
