@@ -48,7 +48,7 @@ class TodosApp extends React.Component{
       todos.push(aTodo)
       break
       case 'sort by title':
-      todos.sort((a,b) => a.title.localeCompare(b.title))
+      todos.sort((a,b) => b.title.localeCompare(a.title))
       break
       case 'edit':
       todos[task.id].isEdited = true
