@@ -9,19 +9,23 @@ const aTodo = {
   content: ''
 }
 
-const validateSchema = (todo, schema) => {
+const validateSchema = (obj, schema) => {
   let result = true
   for (let prop in schema){
-    result = result && (prop in todo) && (typeof todo[prop] === typeof schema[prop])
+    result = result && (prop in obj) && (typeof obj[prop] === typeof schema[prop])
   }
   return result
 }
+
+const isObject = obj => (obj !== null && typeof obj === 'object')
+
+const validateArrayOfObjects = (arr, schema) => arr.reduce((pr, cur)=>(pr && isObject(cur) && validateSchema(cur, schema)), true)
 
 class TodosApp extends React.Component{
   constructor(props){
     super(props)
     this.state={todos: [aTodo], saved: false}
-    this.changeState=this.changeState.bind(this)
+    this.saveState=this.saveState.bind(this)
   }
 
   componentDidMount(){
@@ -29,9 +33,8 @@ class TodosApp extends React.Component{
       const cachedTodos = JSON.parse(localStorage.getItem('todos'))
       if (Array.isArray(cachedTodos) && 
         cachedTodos.length > 0 &&
-        typeof cachedTodos[0] === 'object' &&
-        validateSchema(cachedTodos[0], aTodo)) this.setState({todos: cachedTodos})
-      else throw("wrong value in cache")
+        validateArrayOfObjects(cachedTodos, aTodo)) this.setState({todos: cachedTodos})
+      else throw(Error("wrong value in cache"))
     } 
     catch (err) {
       console.log('Cache error : ', err)
@@ -42,7 +45,6 @@ class TodosApp extends React.Component{
 
   changeState(task){
     let todos = this.state.todos.map(x => Object.assign({}, x))
-    let saved = false
     switch (task.op){
       case 'add':
       todos.push(aTodo)
@@ -68,12 +70,13 @@ class TodosApp extends React.Component{
       case 'set content':
       todos[task.id].content = task.content
       break
-      case 'save':
-      localStorage.setItem('todos', JSON.stringify(todos))
-      saved = true
-      break
     }
-    this.setState({todos, saved})
+    this.setState({todos, saved: false})
+  }
+  
+  saveState(){
+    localStorage.setItem('todos', JSON.stringify(this.state.todos))
+    this.setState({saved: true})
   }
 
   render(){
@@ -89,7 +92,7 @@ class TodosApp extends React.Component{
           </div>
           <div 
             className="save-todos-button"
-            onClick={()=>this.changeState({op: 'save'})}>
+            onClick={this.saveState}>
             {this.state.saved?'Saved!':'Save todos'}
           </div>
           <div 

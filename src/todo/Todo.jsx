@@ -6,17 +6,16 @@ const Todo = (props) => {
       className={props.isActive?"todo":"todo-completed"}>
       <div
         className="todo-content"
-        onClick={props.isActive?props.onBodyClick:null}>
+        onClick={props.isActive && props.onBodyClick}>
         <h2>{props.title}</h2>
         <span>{props.content}</span>
       </div>
-      {props.isActive?
+      {props.isActive &&
         <div
           className="active-todo-toggle"
           onClick={props.onComplete}>
           Click to complete
-        </div> :
-      null}
+        </div>}
       <div
         className="remove-todo-button"
         onClick={props.onRemove}>
